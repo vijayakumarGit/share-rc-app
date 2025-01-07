@@ -13,7 +13,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install packages
-RUN yarn Install
+RUN yarn install
 
 # Copy local code to the container image.
 COPY . ./
