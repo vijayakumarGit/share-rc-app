@@ -10,8 +10,9 @@ import FilterDuration from '../FilterDuration/FilterDuration';
 import { LoaderContext } from "../../App";
 import Modal from '../Modal/Modal';
 import { symbols } from "../constant";
-import { Autocomplete, Hidden, TextField, Typography } from "@mui/material";
-import MobContent from "../MobContent/MobContent";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Hidden, TextField, Typography } from "@mui/material";
+import MobContent, { MobInput } from "../MobContent/MobContent";
 const instance = axios.create({ baseURL: 'https://share-node-app-testphase.up.railway.app' })
 export const Learning = () => {
     const { toggleLoader } = useContext(LoaderContext)
@@ -23,7 +24,7 @@ export const Learning = () => {
     const [modalOpen, setModalOpen] = useState(false)
     const [item, setItem] = useState({});
     const [filterValue, setFilterValue] = useState([]);
-    const [shareData,setShareData]=useState({});
+    const [shareData, setShareData] = useState({});
     let cacheData = '';
     let optParams = {
         opt1: 'change-over-0', opt2: 'desc', opt3: 'gain'
@@ -55,21 +56,21 @@ export const Learning = () => {
             method: 'get',
             url: watchListUrl,
         }).then((respx) => {
-           
+
             instance({
                 method: 'get',
                 url: '/read-data'
             }).then((resp) => {
                 setPriceData(resp.data)
                 setRowData(respx.data.data)
-                const shareData=Object.keys(resp.data).reduce((preValue,key)=> {
+                const shareData = Object.keys(resp.data).reduce((preValue, key) => {
                     return {
-                        ttPrice:parseFloat(preValue.ttPrice+(resp.data[key]?.buySharePrice?.value || 0)),
-                        ttShare:parseFloat(preValue.ttShare+(resp.data[key]?.qty?.value || 0)),
-                        ttProfit:0,
-                        noOfCompany:resp.data[key]?.qty?.value ? preValue.noOfCompany+1 : preValue.noOfCompany
+                        ttPrice: parseFloat(preValue.ttPrice + (resp.data[key]?.buySharePrice?.value || 0)),
+                        ttShare: parseFloat(preValue.ttShare + (resp.data[key]?.qty?.value || 0)),
+                        ttProfit: 0,
+                        noOfCompany: resp.data[key]?.qty?.value ? preValue.noOfCompany + 1 : preValue.noOfCompany
                     }
-                },{ttPrice:0,ttShare:0,ttProfit:0,noOfCompany:0})
+                }, { ttPrice: 0, ttShare: 0, ttProfit: 0, noOfCompany: 0 })
                 setShareData(shareData)
                 toggleLoader(false)
             }).catch(() => {
@@ -109,9 +110,14 @@ export const Learning = () => {
     }
     const handleSaveApi = (data, val) => {
         let updatePriceData = { ...priceData }
-      
-        if (!updatePriceData[data.s]) updatePriceData[data.s] = {}
-        updatePriceData[data.s][val.keyx] = {value:val.value,date: new Date()};
+        if (data) {
+            if (!updatePriceData[data.s]) {
+                updatePriceData[data.s] = {}
+            }
+            updatePriceData[data.s][val.keyx] = { value: val.value, date: new Date() };
+        } else {
+            updatePriceData[val.keyx] = { value: val.value, date: new Date() };
+        }
         // if(updatePriceData[data.s]['qty'] && updatePriceData[data.s]['buyPrice']){
         //     updatePriceData[data.s]['buySharePrice'] = 
         // }
@@ -145,9 +151,42 @@ export const Learning = () => {
                     {showTable ? <Content rowData={rowData} handleModalOpen={handleModalOpen} /> : <ChartAnalysis rowData={rowData} />}
                 </Hidden>
                 <Hidden smUp>
-                    <div style={{ position: 'fixed', width: '100%', 'background-color': '#f6f6f6', zIndex: 999 }}>
 
-                        <Autocomplete
+                    <div style={{ position: 'fixed', width: '100%', 'background-color': '#f6f6f6', zIndex: 999 }}>
+                        <Accordion>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1-content"
+                                id="panel1-header"
+                            >
+                                <Typography component="span">TT Value</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+
+                                <div>
+                                    <Typography >
+                                        Total Price : {shareData?.ttPrice}
+                                    </Typography>
+                                    <Typography >
+                                        Total Share : {shareData?.ttShare}
+                                    </Typography>
+                                    <Typography >
+                                        Total Profit : {shareData?.ttProfit}
+                                    </Typography>
+                                    <Typography >
+                                        No of company : {shareData?.noOfCompany}
+                                    </Typography>
+                                    <div style={{ paddingBottom: '20px' }}>
+                                        {priceData?.ttSgd?.value && <MobInput defaultValue={priceData?.ttSgd?.value} lable={'Total Price SGD'} keyx={'ttSgd'} key={'x-12345678'} handleSave={(v) => handleSaveApi(undefined, v)} />}
+                                    </div>
+
+                                </div>
+                            </AccordionDetails>
+                        </Accordion>
+                        
+                    </div>
+                    <div style={{ marginTop: '50px' }}>
+                    <Autocomplete
                             multiple
                             options={symbols.split(',')}
                             id="auto-complete"
@@ -162,24 +201,7 @@ export const Learning = () => {
                             )}
 
                         />
-                        <div>
-                        <Typography >
-                            Total Price : {shareData?.ttPrice}
-                        </Typography>
-                        <Typography >
-                            Total Share : {shareData?.ttShare}
-                        </Typography>
-                        <Typography >
-                            Total Profit : {shareData?.ttProfit}
-                        </Typography>
-                        <Typography >
-                           No of company : {shareData?.noOfCompany} 
-                        </Typography>
-                        </div>
-                    </div>
-                 
-                    <div style={{ marginTop: '150px' }}>
-                        {rowData.filter(v => filterValue.length > 0 ? filterValue.includes(v.s) : true).map((data) => <div><MobContent data={data} handleSave={(val) => { handleSaveApi(data, val) }} priceData={priceData} /></div>)}
+                        {rowData.filter(v => filterValue.length > 0 ? filterValue.includes(v.s) : true).map((data, i) => <div><MobContent data={data} handleSave={(val) => { handleSaveApi(data, val) }} priceData={priceData} key={'abc' + i} /></div>)}
 
                     </div>
                 </Hidden>

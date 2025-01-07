@@ -12,11 +12,11 @@ const optionData = [
     { key1: ['Change 1Y', 'ch1y', '%'], key2: ['Change 3Y', 'ch3y', '%'] },
     { key1: ['Change 5Y', 'ch5y', '%'], key2: ['Change YTD', 'chYTD', '%'] },
     { key1: ['Price Target', 'priceTarget', '$'] }]
-const MobInput = ({ lable,keyx,handleSave,priceData,data }) => {
+export const MobInput = ({ lable,keyx,handleSave,priceData,data,defaultValue='' }) => {
     const [isEdit, setEdit] = useState(false);
     const value=useRef(null)
     return <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-        <TextField id="input-with-sx" label={lable} variant="standard" disabled={!isEdit} defaultValue={priceData?.[data.s]?.[keyx]?.value} onChange={(e)=>value.current = e.target.value }   slotProps={{ inputLabel: { shrink: true } }}/>
+        <TextField id="input-with-sx" label={lable} variant="standard" disabled={!isEdit} defaultValue={priceData?.[data.s]?.[keyx]?.value || defaultValue } onChange={(e)=>value.current = e.target.value }   slotProps={{ inputLabel: { shrink: true } }}/>
         {isEdit ? <DoneOutlinedIcon sx={{ color: green[500], mr: 1, my: 0.5 }} onClick={() => {setEdit(false); handleSave({keyx,value:value.current})}} /> : <EditOutlinedIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} onClick={() => {setEdit(true) }} />}
     </Box>
 }
@@ -67,7 +67,7 @@ const MobContent = ({ data,handleSave,priceData }) => {
                             <MobInput key={'x-12345'} lable="Buy Price"  keyx='buyPrice' {...additionalProps}  />
                         </Typography>
                         <Typography gutterBottom component="div" >
-                            <MobInput lable="Buy Share price" keyx='buySharePrice' {...additionalProps} />
+                            <MobInput key={'x-123478919292'} lable="Buy Share price" keyx='buySharePrice' {...additionalProps} />
                         </Typography>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -111,9 +111,9 @@ const MobContent = ({ data,handleSave,priceData }) => {
                             </Typography>
                         </div>
                     </div>
-                    {optionData.map((key) => {
+                    {optionData.map((key,i) => {
                         return (
-                            <div key={key} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <div key={'abana'+i} style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <div>
                                     <Typography gutterBottom component="span" fontSize="10px" >
                                         {key.key1[0]}
