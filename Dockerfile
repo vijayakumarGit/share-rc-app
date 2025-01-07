@@ -13,7 +13,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install packages
-RUN npm Install -f
+RUN yarn Install
 
 # Copy local code to the container image.
 COPY . ./
