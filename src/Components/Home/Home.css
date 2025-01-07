@@ -1,0 +1,113 @@
+.carousel_container{
+    /* display: flex; */
+}
+
+:root{
+    --imgleft:65%;
+}
+
+.carousel_list{
+    height: 250px;
+    width: 165px;
+    border-radius: 20px;
+    position: absolute;
+    /* transform: translate(0,-50%); */
+    top:35%;
+    box-shadow: 0 30px 50px #313131;
+    background-position: 50% 50%;
+    background-size: cover;
+    display: inline-block;
+    transition: 0.8s;
+}
+
+.home_main_container{
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+.container{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+}
+
+.carousel_button{
+    position: relative;
+    bottom: 100px;
+    left: 100px;
+}
+.carousel_anim_conatiner{
+    /* right: 50px; */
+    transition: all 2s;
+    position: relative;
+    width: 100%;
+}
+.carousel_container .carousel_list:nth-child(1),
+.carousel_container .carousel_list:nth-child(2) {
+    top:0;
+    left: 0;
+    transform: translate(0,0);
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    animation: zoomRun 150s;
+}
+
+@keyframes zoomRun {
+    from{
+        transform: scale(1);
+    }
+    to{
+        transform: scale(2);
+    }
+    
+}
+
+.carousel_container .carousel_list:nth-child(3){
+    left: var(--imgleft);
+}
+.carousel_container .carousel_list:nth-child(4){
+    left: calc(var(--imgleft) + 210px);
+}
+.carousel_container .carousel_list:nth-child(5){
+    left: calc(var(--imgleft) + 430px);
+    
+}
+.carousel_container .carousel_list:nth-child(n+6){
+    left: calc(var(--imgleft) + 650px);
+    opacity: 0;
+}
+
+.home_content{
+    color: #fff;
+    z-index: 999999;
+    position: relative;
+    width: fit-content;
+    top: 450px;
+    left: 100px;
+    opacity: 0;
+    filter: blur(50px);
+    font-size: 70px;
+    transition:all 1s;
+    font-weight: 600;
+    /* mix-blend-mode: difference; */
+}
+.home_content_content{
+    color: #fff;
+    z-index: 999999;
+    position: relative;
+    width: 300px;
+    top: 450px;
+    left: 100px;
+    opacity: 0;
+    filter: blur(50px);
+    font-size: 16px;
+    transition:all 1s 0.5s;
+    font-weight: 600;
+    /* mix-blend-mode: difference; */
+}
+.carousel_list:not(.carousel_list:nth-child(1), .carousel_list:nth-child(2)):hover{
+    /* transform: scale(1.1);
+    cursor: pointer;
+    top: 29%; */
+}

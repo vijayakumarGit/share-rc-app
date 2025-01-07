@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+
+.model-window{
+  background: green;
+    color: aliceblue;
+    width: 350px;
+    height: 200px;
+    box-shadow: 3px 4px 10px 10px #bebebe;
+    position: fixed;
+    top: 25%;
+    left: 0;
+    right: 0;
+    /* bottom: 0; */
+    margin: 0 auto;
+}
